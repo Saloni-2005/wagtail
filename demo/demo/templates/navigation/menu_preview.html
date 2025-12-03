@@ -1,28 +1,24 @@
-{% extends "base.html" %}
-{% load navigation_tags %}
+{% extends "navigation/menu_base.html" %}
+{% load wagtailcore_tags %}
 
-{% block title %}{{ menu.title }}{% endblock %}
-
-{% block site_title %}{{ menu.title }}{% endblock %}
-
-{% block content %}
-<div class="container">
-    <div class="demo-content">
-        <h1>{{ menu.title }}</h1>
-        <p>This menu contains the following items:</p>
-
-        <ul class="menu-items-list">
-            {% for item in menu.menu_items.all %}
-            <li>
-                <a href="{{ item.link }}">{{ item.title }}</a>
-                {% if item.content %}
-                <p class="item-description">{{ item.content|striptags|truncatewords:20 }}</p>
-                {% endif %}
-            </li>
-            {% empty %}
-            <li>No menu items have been added yet.</li>
-            {% endfor %}
-        </ul>
-    </div>
+{% block menu_content %}
+{% if menu.home_page %}
+<div class="home-page-content">
+    <h2>{{ menu.home_page.title }}</h2>
+    <p>
+        <a href="{% pageurl menu.home_page %}">Go to {{ menu.home_page.title }}</a>
+    </p>
+    {% if menu.home_page.specific.body %}
+    {{ menu.home_page.specific.body|richtext }}
+    {% endif %}
 </div>
+{% elif menu.home_url %}
+<div class="home-url-content">
+    <p>
+        <a href="{{ menu.home_url }}">Visit Website</a>
+    </p>
+</div>
+{% else %}
+<p>Welcome to {{ menu.title }}. Select an item from the menu to view its content.</p>
+{% endif %}
 {% endblock %}

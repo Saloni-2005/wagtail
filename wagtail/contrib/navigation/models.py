@@ -14,11 +14,18 @@ from wagtail.fields import RichTextField
 class Menu(ClusterableModel):
     title = models.CharField(max_length=50)
     slug = AutoSlugField(populate_from='title', editable=True, help_text="Unique identifier of menu. Will be populated automatically from title of menu. Change only if needed.")
+    
+    home_page = models.ForeignKey(
+        'wagtailcore.Page', blank=True, null=True, related_name='+', on_delete=models.SET_NULL, help_text=_("Page to display on the menu's home screen")
+    )
+    home_url = models.CharField(max_length=500, blank=True, null=True, help_text=_("External URL to display on the menu's home screen (overrides Page)"))
 
     panels = [
         MultiFieldPanel([
             FieldPanel('title'),
             FieldPanel('slug'),
+            PageChooserPanel('home_page'),
+            FieldPanel('home_url'),
         ], heading=_("Menu")),
         InlinePanel('menu_items', label=_("Menu Item"))
     ]

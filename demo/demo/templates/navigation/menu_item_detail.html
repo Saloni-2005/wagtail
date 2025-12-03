@@ -1,28 +1,18 @@
-{% extends "base.html" %}
+{% extends "navigation/menu_base.html" %}
 {% load wagtailcore_tags %}
 
 {% block title %}{{ menu_item.title }}{% endblock %}
 
 {% block site_title %}{{ menu.title }}{% endblock %}
 
-{% block content %}
-<div class="container">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/">Home</a></li>
-            <li class="breadcrumb-item"><a href="/{{ menu.slug }}/">{{ menu.title }}</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{ menu_item.title }}</li>
-        </ol>
-    </nav>
+{% block menu_content %}
+<h1>{{ menu_item.title }}</h1>
 
-    <h1>{{ menu_item.title }}</h1>
-
-    {% if menu_item.content %}
-    <div class="content">
-        {{ menu_item.content|richtext }}
-    </div>
-    {% else %}
-    <p class="text-muted">No content has been added to this page yet.</p>
-    {% endif %}
+{% if menu_item.content %}
+<div class="content">
+    {{ menu_item.content|richtext }}
 </div>
+{% else %}
+<p class="text-muted">No content has been added to this page yet.</p>
+{% endif %}
 {% endblock %}

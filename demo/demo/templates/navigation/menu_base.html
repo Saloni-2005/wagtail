@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% load navigation_tags %}
+
+{% block content %}
+<div class="container">
+    <div class="menu-layout">
+        <!-- Left Sidebar -->
+        <div class="menu-sidebar" id="menuSidebar">
+            <nav class="sidebar-nav">
+                <ul class="nav-list">
+                    {% for item in menu.menu_items.all %}
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == item.link %}active{% endif %}"
+                            href="{% if item.menu.slug == menu.slug %}/{{ menu.slug }}/{{ item.slug }}/{% else %}/{{ menu.slug }}/{{ item.menu.slug }}/{{ item.slug }}/{% endif %}">
+                            {{ item.title }}
+                        </a>
+                    </li>
+                    {% empty %}
+                    <li class="nav-item">
+                        <span class="nav-link disabled">No menu items found</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </nav>
+        </div>
+
+        <!-- Right Content Area -->
+        <div class="menu-content">
+            {% block menu_content %}
+            {% endblock %}
+        </div>
+    </div>
+</div>
+
+{% block extra_css %}
+{{ block.super }}
+<style>
+    .menu-layout {
+        display: flex;
+        gap: 2rem;
+        margin-top: 2rem;
+        min-height: 400px;
+        position: relative;
+    }
+
+    .menu-sidebar {
+        position: fixed;
+        left: -270px;
+        top: 70px;
+        width: 250px;
+        height: calc(100vh - 70px);
+        background: #333;
+        border-right: 2px solid #007bff;
+        padding: 1rem;
+        transition: left 0.3s ease;
+        z-index: 9999;
+        overflow-y: auto;
+        box-shadow: 4px 0 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .menu-content {
+        flex-grow: 1;
+        min-width: 0;
+        width: 100%;
+    }
+
+    .nav-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .sidebar-nav .nav-link {
+        display: block;
+        color: white;
+        padding: 0.75rem 1rem;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: all 0.2s;
+        font-weight: 500;
+    }
+
+    .sidebar-nav .nav-link:hover {
+        background-color: #444;
+        color: white;
+    }
+
+    .sidebar-nav .nav-link.active {
+        background-color: #007bff;
+        font-weight: 600;
+        color: white;
+    }
+
+    .sidebar-nav .nav-link.disabled {
+        color: #999;
+        cursor: not-allowed;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .menu-sidebar {
+            top: 70px;
+            height: calc(100vh - 70px);
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const toggleBtn = document.getElementById('sidebarToggle');
+        const sidebar = document.getElementById('menuSidebar');
+        let isOpen = false;
+
+        console.log('Sidebar toggle script loaded');
+        console.log('Toggle button:', toggleBtn);
+        console.log('Sidebar:', sidebar);
+
+        if (toggleBtn && sidebar) {
+            console.log('Both elements found, attaching event listeners');
+
+            toggleBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                console.log('Toggle button clicked');
+
+                isOpen = !isOpen;
+
+                if (isOpen) {
+                    sidebar.style.left = '0px';
+                    toggleBtn.classList.add('active');
+                    console.log('Opening sidebar - setting left to 0px');
+                } else {
+                    sidebar.style.left = '-270px';
+                    toggleBtn.classList.remove('active');
+                    console.log('Closing sidebar - setting left to -270px');
+                }
+
+                console.log('Sidebar computed left:', window.getComputedStyle(sidebar).left);
+                console.log('Sidebar inline style left:', sidebar.style.left);
+            });
+
+            // Close sidebar when clicking outside
+            document.addEventListener('click', function (event) {
+                if (isOpen && !sidebar.contains(event.target) && !toggleBtn.contains(event.target)) {
+                    isOpen = false;
+                    sidebar.style.left = '-270px';
+                    toggleBtn.classList.remove('active');
+                }
+            });
+        } else {
+            console.error('Missing elements - toggleBtn:', toggleBtn, 'sidebar:', sidebar);
+        }
+    });
+</script>
+{% endblock %}
+{% endblock %}

@@ -15,6 +15,10 @@ urlpatterns = [
     path("documents/", include(wagtaildocs_urls)),
     path("search/", search_views.search, name="search"),
     path("login/", views.login_view, name="login"),
+    path("profile/", views.profile_view, name="profile"),
+    path("<slug:context_menu_slug>/header/login/", views.login_view_context, name="login_context"),
+    path("<slug:context_menu_slug>/header/profile/", views.profile_view_context, name="profile_context"),
+    path("<slug:context_menu_slug>/<slug:item_menu_slug>/<slug:item_slug>/", views.menu_item_detail_context, name="menu_item_detail_context"),
     path("<slug:menu_slug>/<slug:item_slug>/", views.menu_item_detail, name="menu_item_detail"),
     path("<slug:slug>/", views.menu_preview, name="menu_preview"),
 ]
