@@ -26,6 +26,7 @@ BASE_DIR = PROJECT_DIR.parent
 INSTALLED_APPS = [
     "home",
     "search",
+    "wagtail.contrib.navigation",
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
     "wagtail.embeds",
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django_extensions",
 ]
 
 MIDDLEWARE = [

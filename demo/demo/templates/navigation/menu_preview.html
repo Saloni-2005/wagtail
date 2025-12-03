@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load navigation_tags %}
+
+{% block title %}{{ menu.title }}{% endblock %}
+
+{% block site_title %}{{ menu.title }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="demo-content">
+        <h1>{{ menu.title }}</h1>
+        <p>This menu contains the following items:</p>
+
+        <ul class="menu-items-list">
+            {% for item in menu.menu_items.all %}
+            <li>
+                <a href="{{ item.link }}">{{ item.title }}</a>
+                {% if item.content %}
+                <p class="item-description">{{ item.content|striptags|truncatewords:20 }}</p>
+                {% endif %}
+            </li>
+            {% empty %}
+            <li>No menu items have been added yet.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}

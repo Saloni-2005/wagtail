@@ -1,0 +1,31 @@
+{% load navigation_tags wagtailimages_tags %}
+
+{% if menu_items %}
+<ul class="navigation-menu">
+    {% for item in menu_items %}
+    {% get_menu item.slug item.page request.user.is_authenticated as submenu %}
+    <li class="{% if submenu %}has-children{% endif %}">
+        <a href="{{ item.url }}" {% if item.open_in_new_tab %} target="_blank" rel="noopener" {% endif %}>
+            {% if item.icon %}
+            {% image item.icon fill-20x20 class="menu-icon" %}
+            {% endif %}
+            {{ item.title }}
+        </a>
+        {% if submenu %}
+        <ul class="children">
+            {% for subitem in submenu %}
+            <li>
+                <a href="{{ subitem.url }}" {% if subitem.open_in_new_tab %} target="_blank" rel="noopener" {% endif %}>
+                    {% if subitem.icon %}
+                    {% image subitem.icon fill-20x20 class="menu-icon" %}
+                    {% endif %}
+                    {{ subitem.title }}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}

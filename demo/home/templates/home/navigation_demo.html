@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% load static navigation_tags %}
+
+{% block title %}Navigation Demo{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="demo-content">
+        <h1>Wagtail Navigation Demo</h1>
+        <p>This demo showcases the Wagtail Navigation system in action. You can see the navigation menus in the header and footer of this page.</p>
+        
+        <div class="demo-section">
+            <h2>Features Demonstrated</h2>
+            <ul>
+                <li>Hierarchical navigation menus with nested items</li>
+                <li>Custom styling and responsive design</li>
+                <li>Multiple navigation menus (header and footer)</li>
+                <li>Template tag integration</li>
+                <li>Admin interface for menu management</li>
+            </ul>
+        </div>
+
+        <div class="demo-section">
+            <h2>Admin Interface</h2>
+            <p>To manage navigation menus, visit the Wagtail admin interface:</p>
+            <a href="/admin/" class="admin-link">Go to Wagtail Admin</a>
+            <p>Navigate to <strong>Settings → Navigation</strong> to create and manage your menus.</p>
+        </div>
+
+        <div class="demo-section">
+            <h2>Template Usage Examples</h2>
+            
+            <h3>Basic Navigation Menu</h3>
+            <div class="code-block">{% verbatim %}{% load navigation_tags %}
+{% navigation_menu 'main-menu' %}{% endverbatim %}</div>
+
+            <h3>Custom Template</h3>
+            <div class="code-block">{% verbatim %}{% navigation_menu 'main-menu' template='navigation/custom.html' %}{% endverbatim %}</div>
+
+            <h3>Get Menu Items as Variable</h3>
+            <div class="code-block">{% verbatim %}{% get_navigation_menu 'main-menu' as menu_items %}
+{% for item in menu_items %}
+    <a href="{{ item.url }}">{{ item.title }}</a>
+{% endfor %}{% endverbatim %}</div>
+        </div>
+
+        <div class="demo-section">
+            <h2>Current Navigation Data</h2>
+            
+            <h3>Main Menu Items:</h3>
+            {% get_navigation_menu 'main-menu' as main_menu %}
+            {% if main_menu %}
+                <ul>
+                    {% for item in main_menu %}
+                        <li>
+                            <strong>{{ item.title }}</strong> → {{ item.url }}
+                            {% if item.children %}
+                                <ul>
+                                    {% for child in item.children %}
+                                        <li>{{ child.title }} → {{ child.url }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p><em>No main menu items found. Create some in the admin interface!</em></p>
+            {% endif %}
+
+            <h3>Footer Menu Items:</h3>
+            {% get_navigation_menu 'footer-menu' as footer_menu %}
+            {% if footer_menu %}
+                <ul>
+                    {% for item in footer_menu %}
+                        <li><strong>{{ item.title }}</strong> → {{ item.url }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p><em>No footer menu items found. Create some in the admin interface!</em></p>
+            {% endif %}
+        </div>
+
+        <div class="demo-section">
+            <h2>Management Commands</h2>
+            <p>You can export and import navigation menus using management commands:</p>
+            
+            <h3>Export Menu</h3>
+            <div class="code-block">python manage.py export_menu main-menu output.json</div>
+            
+            <h3>Import Menu</h3>
+            <div class="code-block">python manage.py import_menu sample_navigation.json</div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -7,14 +7,17 @@ from wagtail import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
 
 from search import views as search_views
+from . import views
 
 urlpatterns = [
     path("django-admin/", admin.site.urls),
     path("admin/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
     path("search/", search_views.search, name="search"),
+    path("login/", views.login_view, name="login"),
+    path("<slug:menu_slug>/<slug:item_slug>/", views.menu_item_detail, name="menu_item_detail"),
+    path("<slug:slug>/", views.menu_preview, name="menu_preview"),
 ]
-
 
 if settings.DEBUG:
     from django.conf.urls.static import static
@@ -29,7 +32,4 @@ urlpatterns = urlpatterns + [
     # Wagtail's page serving mechanism. This should be the last pattern in
     # the list:
     path("", include(wagtail_urls)),
-    # Alternatively, if you want Wagtail pages to be served from a subpath
-    # of your site, rather than the site root:
-    #    path("pages/", include(wagtail_urls)),
 ]

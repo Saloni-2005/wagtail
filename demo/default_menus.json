@@ -1,0 +1,146 @@
+[
+  {
+    "model": "wagtailnavigation.menu",
+    "pk": 1,
+    "fields": {
+      "title": "Header Menu",
+      "slug": "header"
+    }
+  },
+  {
+    "model": "wagtailnavigation.menu",
+    "pk": 2,
+    "fields": {
+      "title": "Footer Menu",
+      "slug": "footer"
+    }
+  },
+  {
+    "model": "wagtailnavigation.menuitem",
+    "pk": 1,
+    "fields": {
+      "menu": 1,
+      "item_type": "custom",
+      "title": "Home",
+      "slug": "home",
+      "content": "",
+      "link_url": "/",
+      "link_page": null,
+      "open_in_new_tab": false,
+      "show_when": "always",
+      "sort_order": 0
+    }
+  },
+  {
+    "model": "wagtailnavigation.menuitem",
+    "pk": 2,
+    "fields": {
+      "menu": 1,
+      "item_type": "about",
+      "title": "About",
+      "slug": "about",
+      "content": "<h2>About Our Company</h2><p>We are a leading provider of innovative solutions.</p>",
+      "link_url": "",
+      "link_page": null,
+      "open_in_new_tab": false,
+      "show_when": "always",
+      "sort_order": 1
+    }
+  },
+  {
+    "model": "wagtailnavigation.menuitem",
+    "pk": 5,
+    "fields": {
+      "menu": 1,
+      "item_type": "services",
+      "title": "Services",
+      "slug": "services",
+      "content": "<h2>Our Services</h2><p>We offer comprehensive services.</p>",
+      "link_url": "",
+      "link_page": null,
+      "open_in_new_tab": false,
+      "show_when": "always",
+      "sort_order": 2
+    }
+  },
+  {
+    "model": "wagtailnavigation.menuitem",
+    "pk": 10,
+    "fields": {
+      "menu": 1,
+      "item_type": "contact",
+      "title": "Contact",
+      "slug": "contact",
+      "content": "<h2>Get in Touch</h2><p><strong>Email:</strong> info@example.com</p>",
+      "link_url": "",
+      "link_page": null,
+      "open_in_new_tab": false,
+      "show_when": "always",
+      "sort_order": 3
+    }
+  },
+  {
+    "model": "wagtailnavigation.menuitem",
+    "pk": 12,
+    "fields": {
+      "menu": 1,
+      "item_type": "custom",
+      "title": "Account",
+      "slug": "account",
+      "content": "<h2>My Account</h2><p>Manage your account settings and preferences.</p>",
+      "link_url": "",
+      "link_page": null,
+      "open_in_new_tab": false,
+      "show_when": "logged_in",
+      "sort_order": 4
+    }
+  },
+  {
+    "model": "wagtailnavigation.menuitem",
+    "pk": 13,
+    "fields": {
+      "menu": 2,
+      "item_type": "privacy",
+      "title": "Privacy Policy",
+      "slug": "privacy",
+      "content": "<h2>Privacy Policy</h2><p>We protect your data.</p>",
+      "link_url": "",
+      "link_page": null,
+      "open_in_new_tab": false,
+      "show_when": "always",
+      "sort_order": 0
+    }
+  },
+  {
+    "model": "wagtailnavigation.menuitem",
+    "pk": 14,
+    "fields": {
+      "menu": 2,
+      "item_type": "terms",
+      "title": "Terms of Service",
+      "slug": "terms",
+      "content": "<h2>Terms of Service</h2><p>Terms and conditions.</p>",
+      "link_url": "",
+      "link_page": null,
+      "open_in_new_tab": false,
+      "show_when": "always",
+      "sort_order": 1
+    }
+  },
+  {
+    "model": "wagtailnavigation.menuitem",
+    "pk": 15,
+    "fields": {
+      "menu": 2,
+      "item_type": "custom",
+      "title": "Support",
+      "slug": "support",
+      "content": "<h2>Customer Support</h2><p>We're here to help.</p>",
+      "link_url": "",
+      "link_page": null,
+      "open_in_new_tab": false,
+      "show_when": "always",
+      "sort_order": 2
+    }
+  }
+]
