@@ -1,13 +1,43 @@
 {% extends "navigation/menu_base.html" %}
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags navigation_tags navigation_filters %}
 
 {% block title %}{{ menu_item.title }}{% endblock %}
 
 {% block site_title %}{{ menu.title }}{% endblock %}
 
+{% block header_menu_items %}
+{% get_menu "header" None request.user.is_authenticated as navigation %}
+{% for item in navigation|exclude_customized:menu_item.custom_header %}
+<li><a href="{{ item.url }}">{{ item.title }}</a></li>
+{% endfor %}
+{% if menu_item.custom_header %}
+{% for block in menu_item.custom_header %}
+<li>
+    <a href="{{ block.value.url }}" {% if block.value.open_in_new_tab %}target="_blank" rel="noopener" {% endif %}>
+        {{ block.value.display_title }}
+    </a>
+</li>
+{% endfor %}
+{% endif %}
+{% endblock %}
+
+{% block footer_navigation %}
+{% get_menu "footer" None request.user.is_authenticated as footer_nav %}
+{% for item in footer_nav|exclude_customized:menu_item.custom_footer %}
+<li><a href="{{ item.url }}">{{ item.title }}</a></li>
+{% endfor %}
+{% if menu_item.custom_footer %}
+{% for block in menu_item.custom_footer %}
+<li>
+    <a href="{{ block.value.url }}" {% if block.value.open_in_new_tab %}target="_blank" rel="noopener" {% endif %}>
+        {{ block.value.display_title }}
+    </a>
+</li>
+{% endfor %}
+{% endif %}
+{% endblock %}
+
 {% block menu_content %}
-
-
 {% if menu_item.content %}
 <div class="content">
     {{ menu_item.content|richtext }}

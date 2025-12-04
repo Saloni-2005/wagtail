@@ -154,28 +154,21 @@
                 </a>
             </h1>
             <nav class="main-navigation">
+                {% block header_navigation %}
                 <ul class="navigation-menu">
-                    {% if menu_item and menu_item.custom_header %}
-                    {% for block in menu_item.custom_header %}
-                    <li>
-                        <a href="{% if block.value.page %}{{ block.value.page.url }}{% else %}{{ block.value.url }}{% endif %}"
-                            {% if block.value.open_in_new_tab %}target="_blank" {% endif %}>
-                            {{ block.value.display_title }}
-                        </a>
-                    </li>
-                    {% endfor %}
-                    {% else %}
+                    {% block header_menu_items %}
                     {% get_menu "header" None request.user.is_authenticated as navigation %}
                     {% for item in navigation %}
                     <li><a href="{{ item.url }}">{{ item.title }}</a></li>
                     {% endfor %}
-                    {% endif %}
+                    {% endblock %}
 
                     <li id="authLink">
                         <a href="/login/"
                             onclick="localStorage.setItem('returnUrl', window.location.pathname);">Login</a>
                     </li>
                 </ul>
+                {% endblock %}
             </nav>
         </div>
     </header>
@@ -187,22 +180,10 @@
     <footer class="site-footer">
         <div class="container">
             <nav class="footer-navigation">
-                {% if menu_item and menu_item.custom_footer %}
-                <ul class="footer-links" style="list-style: none; padding: 0; margin: 0; display: flex; gap: 1rem;">
-                    {% for block in menu_item.custom_footer %}
-                    <li>
-                        <a href="{% if block.value.page %}{{ block.value.page.url }}{% else %}{{ block.value.url }}{% endif %}"
-                            {% if block.value.open_in_new_tab %}target="_blank" {% endif %}
-                            style="color: inherit; text-decoration: none;">
-                            {{ block.value.display_title }}
-                        </a>
-                    </li>
-                    {% endfor %}
-                </ul>
-                {% else %}
+                {% block footer_navigation %}
                 {% get_menu "footer" None request.user.is_authenticated as navigation %}
                 {% include "navigation/menu.html" with menu_items=navigation %}
-                {% endif %}
+                {% endblock %}
             </nav>
             <p>&copy; 2024 {% if menu %}{{ menu.title }}{% elif menu_slug %}{{ menu_slug|title }}{% else %}Wagtail
                 Navigation Demo{% endif %}</p>
