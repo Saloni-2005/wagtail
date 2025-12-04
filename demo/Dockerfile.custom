@@ -62,5 +62,6 @@ RUN python manage.py collectstatic --noinput --clear
 
 # Runtime command that executes when "docker run" is called
 # 1. Migrate the database
-# 2. Start the application server
-CMD set -xe; python manage.py migrate --noinput; gunicorn demo.wsgi:application
+# 2. Create default superuser (if none exists)
+# 3. Start the application server
+CMD set -xe; python manage.py migrate --noinput; python manage.py create_default_superuser; gunicorn demo.wsgi:application
