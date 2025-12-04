@@ -8,7 +8,40 @@ from modelcluster.models import ClusterableModel
 from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel, PageChooserPanel
 from wagtail.models import Orderable
 from wagtail.snippets.models import register_snippet
-from wagtail.fields import RichTextField
+from wagtail.fields import RichTextField, StreamField
+from wagtail import blocks
+from django.core.exceptions import ValidationError
+
+ITEM_TYPE_CHOICES = [
+    ('about', _('About')),
+    ('contact', _('Contact')),
+    ('services', _('Services')),
+    ('products', _('Products')),
+    ('blog', _('Blog')),
+    ('faq', _('FAQ')),
+    ('team', _('Team')),
+    ('careers', _('Careers')),
+    ('privacy', _('Privacy Policy')),
+    ('terms', _('Terms of Service')),
+    ('custom', _('Custom')),
+]
+
+HEADER_LINK_CHOICES = [
+    ('about', _('About')),
+    ('contact', _('Contact')),
+    ('services', _('Services')),
+    ('products', _('Products')),
+    ('blog', _('Blog')),
+    ('custom', _('Custom')),
+]
+
+FOOTER_LINK_CHOICES = [
+    ('privacy', _('Privacy Policy')),
+    ('terms', _('Terms of Service')),
+    ('faq', _('FAQ')),
+    ('contact', _('Contact')),
+    ('custom', _('Custom')),
+]
 
 @register_snippet
 class Menu(ClusterableModel):
@@ -34,20 +67,78 @@ class Menu(ClusterableModel):
         return self.title
 
 
+class LinkStructValue(blocks.StructValue):
+    @property
+    def display_title(self):
+        link_type = self.get('link_type')
+        if link_type == 'custom':
+            title = self.get('title')
+            if title:
+                return title
+            page = self.get('page')
+            if page:
+                return page.title
+            return self.get('url')
+        else:
+            # Return the display label for the selected choice
+            # Check all choice lists to find the label
+            all_choices = dict(ITEM_TYPE_CHOICES + HEADER_LINK_CHOICES + FOOTER_LINK_CHOICES)
+            return all_choices.get(link_type, link_type)
+
+
+class HeaderLinkBlock(blocks.StructBlock):
+    link_type = blocks.ChoiceBlock(choices=HEADER_LINK_CHOICES, default='custom', help_text=_("Select the type of link"))
+    title = blocks.CharBlock(required=False, help_text=_("Title (Only used for 'Custom' links)"))
+    url = blocks.URLBlock(required=False, help_text=_("External URL"))
+    page = blocks.PageChooserBlock(required=False, help_text=_("Internal Page"))
+    open_in_new_tab = blocks.BooleanBlock(required=False, help_text=_("Open in new tab"))
+
+    class Meta:
+        template = "navigation/blocks/link_block.html"
+        value_class = LinkStructValue
+
+
+class FooterLinkBlock(blocks.StructBlock):
+    link_type = blocks.ChoiceBlock(choices=FOOTER_LINK_CHOICES, default='custom', help_text=_("Select the type of link"))
+    title = blocks.CharBlock(required=False, help_text=_("Title (Only used for 'Custom' links)"))
+    url = blocks.URLBlock(required=False, help_text=_("External URL"))
+    page = blocks.PageChooserBlock(required=False, help_text=_("Internal Page"))
+    open_in_new_tab = blocks.BooleanBlock(required=False, help_text=_("Open in new tab"))
+
+    class Meta:
+        template = "navigation/blocks/link_block.html"
+        value_class = LinkStructValue
+
+
+class UniqueLinkStreamBlock(blocks.StreamBlock):
+    def __init__(self, block_types=None, **kwargs):
+        super().__init__(block_types, **kwargs)
+    
+    def clean(self, value, **kwargs):
+        cleaned_data = super().clean(value, **kwargs)
+        errors = {}
+        types_seen = set()
+        
+        for i, child in enumerate(cleaned_data):
+            # child.value is a StructValue, so we access it like a dict or attribute
+            link_type = child.value.get('link_type')
+            
+            if link_type and link_type != 'custom':
+                if link_type in types_seen:
+                    errors[i] = blocks.StreamBlockValidationError(
+                        non_block_errors=blocks.ErrorList([
+                            ValidationError(f"The link type '{link_type}' can only be added once.")
+                        ])
+                    )
+                types_seen.add(link_type)
+        
+        if errors:
+            raise blocks.StreamBlockValidationError(block_errors=errors)
+        return cleaned_data
+
+
 class MenuItem(Orderable):
-    ITEM_TYPE_CHOICES = [
-        ('about', _('About')),
-        ('contact', _('Contact')),
-        ('services', _('Services')),
-        ('products', _('Products')),
-        ('blog', _('Blog')),
-        ('faq', _('FAQ')),
-        ('team', _('Team')),
-        ('careers', _('Careers')),
-        ('privacy', _('Privacy Policy')),
-        ('terms', _('Terms of Service')),
-        ('custom', _('Custom')),
-    ]
+    ITEM_TYPE_CHOICES = ITEM_TYPE_CHOICES
 
     menu = ParentalKey('Menu', related_name='menu_items', help_text=_("Menu to which this item belongs"))
     item_type = models.CharField(
@@ -76,6 +167,24 @@ class MenuItem(Orderable):
         default='always',
     )
 
+    custom_header = StreamField(
+        UniqueLinkStreamBlock([('link', HeaderLinkBlock())]),
+        blank=True, 
+        null=True, 
+        use_json_field=True, 
+        verbose_name=" ",
+        help_text=_("Add links to display in the header for this menu item.")
+    )
+    
+    custom_footer = StreamField(
+        UniqueLinkStreamBlock([('link', FooterLinkBlock())]),
+        blank=True, 
+        null=True, 
+        use_json_field=True, 
+        verbose_name=" ",
+        help_text=_("Add links to display in the footer for this menu item.")
+    )
+
     panels = [
         FieldPanel('item_type'),
         FieldPanel('title'),
@@ -87,6 +196,12 @@ class MenuItem(Orderable):
         FieldPanel('title_of_submenu'),
         FieldPanel('icon'),
         FieldPanel('show_when'),
+        MultiFieldPanel([
+            FieldPanel('custom_header'),
+        ], heading=_("Custom Header"), classname="collapsible collapsed"),
+        MultiFieldPanel([
+            FieldPanel('custom_footer'),
+        ], heading=_("Custom Footer"), classname="collapsible collapsed"),
     ]
 
     def __str__(self):
