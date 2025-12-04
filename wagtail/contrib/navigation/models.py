@@ -96,8 +96,8 @@ class UniqueLinkStreamBlock(blocks.StreamBlock):
         types_seen = set()
         
         for i, child in enumerate(cleaned_data):
-            # child.value is a StructValue, so we access it like a dict or attribute
-            link_type = child.value.get('link_type')
+            # child is a StructValue, so we access it like a dict or attribute
+            link_type = child.get('link_type')
             
             if link_type and link_type != 'custom':
                 if link_type in types_seen:
