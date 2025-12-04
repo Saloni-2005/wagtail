@@ -12,7 +12,8 @@ EXPOSE 8000
 # 2. Set PORT variable that is used by Gunicorn.
 ENV PYTHONUNBUFFERED=1 \
     PORT=8000 \
-    PYTHONDONTWRITEBYTECODE=1
+    PYTHONDONTWRITEBYTECODE=1 \
+    DJANGO_SETTINGS_MODULE=demo.settings.production
 
 # Install system packages required by Wagtail and Django.
 RUN apt-get update --yes --quiet && apt-get install --yes --quiet --no-install-recommends \
