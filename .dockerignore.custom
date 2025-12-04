@@ -1,0 +1,76 @@
+# Git
+.git
+.gitignore
+.gitattributes
+.github
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+env/
+ENV/
+demo/venv/
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Database
+*.sqlite3
+db.sqlite3
+demo/db.sqlite3
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Testing
+.coverage
+.pytest_cache/
+htmlcov/
+
+# Documentation
+docs/_build/
+
+# Compiled files
+*.pyc
+*.pyo
+
+# Local settings
+local_settings.py
+.env
+.env.local
+
+# Media files (optional - uncomment if you don't want to include uploaded media)
+# demo/media/
