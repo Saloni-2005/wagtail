@@ -11,5 +11,5 @@ dj-database-url==2.1.0
 whitenoise==6.6.0
 django-filter
 Pillow
-taggit
-modelcluster
+django-taggit
+django-modelcluster
