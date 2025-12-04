@@ -40,7 +40,7 @@ def merge_customized(menu_items, custom_items):
                 'url': item.get('url'),  # Use original item's URL (the page URL, not external URL)
                 'open_in_new_tab': False,  # Don't open in new tab since we're embedding
                 'is_custom': True,
-                'external_url': custom_block.value.url  # Store external URL for reference
+                'external_url': custom_block.value.get('url')  # Store external URL for reference
             })
             # Remove from map so we don't add it again
             del custom_map[item_type]
@@ -52,7 +52,7 @@ def merge_customized(menu_items, custom_items):
     for block in custom_map.values():
         result.append({
             'title': block.value.display_title,
-            'url': block.value.url,  # For new items, use their URL
+            'url': block.value.get('url'),  # For new items, use their URL
             'open_in_new_tab': block.value.get('open_in_new_tab', False),
             'is_custom': True
         })
