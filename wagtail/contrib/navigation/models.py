@@ -43,30 +43,6 @@ FOOTER_LINK_CHOICES = [
     ('custom', _('Custom')),
 ]
 
-@register_snippet
-class Menu(ClusterableModel):
-    title = models.CharField(max_length=50)
-    slug = AutoSlugField(populate_from='title', editable=True, help_text="Unique identifier of menu. Will be populated automatically from title of menu. Change only if needed.")
-    
-    home_page = models.ForeignKey(
-        'wagtailcore.Page', blank=True, null=True, related_name='+', on_delete=models.SET_NULL, help_text=_("Page to display on the menu's home screen")
-    )
-    home_url = models.CharField(max_length=500, blank=True, null=True, help_text=_("External URL to display on the menu's home screen (overrides Page)"))
-
-    panels = [
-        MultiFieldPanel([
-            FieldPanel('title'),
-            FieldPanel('slug'),
-            PageChooserPanel('home_page'),
-            FieldPanel('home_url'),
-        ], heading=_("Menu")),
-        InlinePanel('menu_items', label=_("Menu Item"))
-    ]
-
-    def __str__(self):
-        return self.title
-
-
 class LinkStructValue(blocks.StructValue):
     @property
     def display_title(self):
@@ -137,6 +113,54 @@ class UniqueLinkStreamBlock(blocks.StreamBlock):
         return cleaned_data
 
 
+@register_snippet
+class Menu(ClusterableModel):
+    title = models.CharField(max_length=50)
+    slug = AutoSlugField(populate_from='title', editable=True, help_text="Unique identifier of menu. Will be populated automatically from title of menu. Change only if needed.")
+    
+    home_page = models.ForeignKey(
+        'wagtailcore.Page', blank=True, null=True, related_name='+', on_delete=models.SET_NULL, help_text=_("Page to display on the menu's home screen")
+    )
+    home_url = models.CharField(max_length=500, blank=True, null=True, help_text=_("External URL to display on the menu's home screen (overrides Page)"))
+
+    custom_header = StreamField(
+        UniqueLinkStreamBlock([('link', HeaderLinkBlock())]),
+        blank=True, 
+        null=True, 
+        use_json_field=True, 
+        verbose_name=" ",
+        help_text=_("Add links to display in the header for this menu.")
+    )
+    
+    custom_footer = StreamField(
+        UniqueLinkStreamBlock([('link', FooterLinkBlock())]),
+        blank=True, 
+        null=True, 
+        use_json_field=True, 
+        verbose_name=" ",
+        help_text=_("Add links to display in the footer for this menu.")
+    )
+
+    panels = [
+        MultiFieldPanel([
+            FieldPanel('title'),
+            FieldPanel('slug'),
+            PageChooserPanel('home_page'),
+            FieldPanel('home_url'),
+        ], heading=_("Menu")),
+        InlinePanel('menu_items', label=_("Menu Item")),
+        MultiFieldPanel([
+            FieldPanel('custom_header'),
+        ], heading=_("Custom Header"), classname="collapsible collapsed"),
+        MultiFieldPanel([
+            FieldPanel('custom_footer'),
+        ], heading=_("Custom Footer"), classname="collapsible collapsed"),
+    ]
+
+    def __str__(self):
+        return self.title
+
+
 class MenuItem(Orderable):
     ITEM_TYPE_CHOICES = ITEM_TYPE_CHOICES
 
@@ -167,24 +191,6 @@ class MenuItem(Orderable):
         default='always',
     )
 
-    custom_header = StreamField(
-        UniqueLinkStreamBlock([('link', HeaderLinkBlock())]),
-        blank=True, 
-        null=True, 
-        use_json_field=True, 
-        verbose_name=" ",
-        help_text=_("Add links to display in the header for this menu item.")
-    )
-    
-    custom_footer = StreamField(
-        UniqueLinkStreamBlock([('link', FooterLinkBlock())]),
-        blank=True, 
-        null=True, 
-        use_json_field=True, 
-        verbose_name=" ",
-        help_text=_("Add links to display in the footer for this menu item.")
-    )
-
     panels = [
         FieldPanel('item_type'),
         FieldPanel('title'),
@@ -196,12 +202,6 @@ class MenuItem(Orderable):
         FieldPanel('title_of_submenu'),
         FieldPanel('icon'),
         FieldPanel('show_when'),
-        MultiFieldPanel([
-            FieldPanel('custom_header'),
-        ], heading=_("Custom Header"), classname="collapsible collapsed"),
-        MultiFieldPanel([
-            FieldPanel('custom_footer'),
-        ], heading=_("Custom Footer"), classname="collapsible collapsed"),
     ]
 
     def __str__(self):
