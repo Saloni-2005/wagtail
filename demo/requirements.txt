@@ -1,6 +1,9 @@
 Django>=5.2,<5.3
 wagtail==7.3a0
 
+# Development dependencies
+django-extensions>=3.2.3
+
 # Production dependencies for Render
 gunicorn==20.0.4
 psycopg2-binary==2.9.9
