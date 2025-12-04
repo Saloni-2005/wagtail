@@ -7,34 +7,34 @@
 
 {% block header_menu_items %}
 {% get_menu "header" None request.user.is_authenticated as navigation %}
-{% for item in navigation|exclude_customized:menu_item.custom_header %}
-<li><a href="{{ item.url }}">{{ item.title }}</a></li>
-{% endfor %}
-{% if menu_item.custom_header %}
-{% for block in menu_item.custom_header %}
+{% for item in navigation|merge_customized:menu.custom_header %}
+{% if item.is_custom %}
 <li>
-    <a href="{{ block.value.url }}" {% if block.value.open_in_new_tab %}target="_blank" rel="noopener" {% endif %}>
-        {{ block.value.display_title }}
+    <a href="{{ item.url }}" {% if item.open_in_new_tab %}target="_blank" rel="noopener" {% endif %}>
+        {{ item.title }}
     </a>
 </li>
-{% endfor %}
+{% else %}
+<li><a href="{{ item.url }}">{{ item.title }}</a></li>
 {% endif %}
+{% endfor %}
 {% endblock %}
 
 {% block footer_navigation %}
-{% get_menu "footer" None request.user.is_authenticated as footer_nav %}
-{% for item in footer_nav|exclude_customized:menu_item.custom_footer %}
-<li><a href="{{ item.url }}">{{ item.title }}</a></li>
-{% endfor %}
-{% if menu_item.custom_footer %}
-{% for block in menu_item.custom_footer %}
-<li>
-    <a href="{{ block.value.url }}" {% if block.value.open_in_new_tab %}target="_blank" rel="noopener" {% endif %}>
-        {{ block.value.display_title }}
-    </a>
-</li>
-{% endfor %}
-{% endif %}
+<ul class="navigation-menu">
+    {% get_menu "footer" None request.user.is_authenticated as footer_nav %}
+    {% for item in footer_nav|merge_customized:menu.custom_footer %}
+    {% if item.is_custom %}
+    <li>
+        <a href="{{ item.url }}" {% if item.open_in_new_tab %}target="_blank" rel="noopener" {% endif %}>
+            {{ item.title }}
+        </a>
+    </li>
+    {% else %}
+    <li><a href="{{ item.url }}">{{ item.title }}</a></li>
+    {% endif %}
+    {% endfor %}
+</ul>
 {% endblock %}
 
 {% block menu_content %}
