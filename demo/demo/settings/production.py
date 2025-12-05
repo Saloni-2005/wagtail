@@ -24,18 +24,11 @@ DATABASES = {
     )
 }
 
-# Static files - Use WhiteNoise for serving static files
-MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
+# Static files - WhiteNoise is already added in base.py
+# MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
 
-# Override the STORAGES setting from base.py to use WhiteNoise
-STORAGES = {
-    "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
-    },
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
-    },
-}
+# Use the STORAGES setting from base.py (CompressedManifestStaticFilesStorage)
+# STORAGES = { ... }
 
 # Security settings
 if not DEBUG:

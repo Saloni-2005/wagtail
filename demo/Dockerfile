@@ -46,7 +46,7 @@ COPY --chown=wagtail:wagtail . .
 USER wagtail
 
 # Collect static files.
-RUN python manage.py collectstatic --noinput --clear
+RUN SECRET_KEY=build_secret_key DJANGO_SETTINGS_MODULE=demo.settings.production python manage.py collectstatic --noinput --clear
 
 # Runtime command that executes when "docker run" is called, it does the
 # following:
