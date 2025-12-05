@@ -1,0 +1,11 @@
+{% load wagtailimages_tags %}
+
+<a href="{{ item.url }}" {% if item.open_in_new_tab %} target="_blank" rel="noopener" {% endif %}>
+    {% if item.icon %}
+        {% comment %}Try to render the icon with error handling{% endcomment %}
+        {% with icon_size=icon_size|default:"fill-20x20" %}
+            {% image item.icon icon_size class="menu-icon" alt="{{ item.title }} icon" %}
+        {% endwith %}
+    {% endif %}
+    <span class="menu-text">{{ item.title }}</span>
+</a>

@@ -7,9 +7,17 @@
     <li class="{% if submenu %}has-children{% endif %}">
         <a href="{{ item.url }}" {% if item.open_in_new_tab %} target="_blank" rel="noopener" {% endif %}>
             {% if item.icon %}
-            {% image item.icon fill-20x20 class="menu-icon" %}
+                {% comment %}Render icon with error handling{% endcomment %}
+                {% with item.icon as menu_icon %}
+                    {% if menu_icon.file %}
+                        {% image menu_icon fill-20x20 class="menu-icon" alt="{{ item.title }} icon" %}
+                    {% else %}
+                        {% comment %}Fallback for broken image references{% endcomment %}
+                        <span class="menu-icon menu-icon-placeholder" title="Icon not available">📄</span>
+                    {% endif %}
+                {% endwith %}
             {% endif %}
-            {{ item.title }}
+            <span class="menu-text">{{ item.title }}</span>
         </a>
         {% if submenu %}
         <ul class="children">
@@ -17,9 +25,15 @@
             <li>
                 <a href="{{ subitem.url }}" {% if subitem.open_in_new_tab %} target="_blank" rel="noopener" {% endif %}>
                     {% if subitem.icon %}
-                    {% image subitem.icon fill-20x20 class="menu-icon" %}
+                        {% with subitem.icon as submenu_icon %}
+                            {% if submenu_icon.file %}
+                                {% image submenu_icon fill-16x16 class="menu-icon" alt="{{ subitem.title }} icon" %}
+                            {% else %}
+                                <span class="menu-icon menu-icon-placeholder" title="Icon not available">📄</span>
+                            {% endif %}
+                        {% endwith %}
                     {% endif %}
-                    {{ subitem.title }}
+                    <span class="menu-text">{{ subitem.title }}</span>
                 </a>
             </li>
             {% endfor %}
