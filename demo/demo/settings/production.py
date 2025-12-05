@@ -27,6 +27,11 @@ DATABASES = {
 # Static files - WhiteNoise is already added in base.py
 # MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
 
+from whitenoise.storage import CompressedManifestStaticFilesStorage
+
+class NonStrictCompressedManifestStaticFilesStorage(CompressedManifestStaticFilesStorage):
+    manifest_strict = False
+
 # Use the STORAGES setting from base.py (CompressedManifestStaticFilesStorage)
 # But we need to relax strictness because of a missing Jcrop.gif in Wagtail 7.3a0
 STORAGES = {
@@ -34,10 +39,7 @@ STORAGES = {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-        "OPTIONS": {
-            "manifest_strict": False,
-        },
+        "BACKEND": "demo.settings.production.NonStrictCompressedManifestStaticFilesStorage",
     },
 }
 
