@@ -130,4 +130,4 @@ RUN echo "=== POST-COLLECTSTATIC CHECK ===" && \
 # 5. Test menu functionality
 # 6. Test icon functionality
 # 7. Start the application server
-CMD set -xe; python manage.py migrate --noinput; python manage.py create_default_superuser; python manage.py setup_demo_pages; python manage.py create_default_menus; python manage.py test_menu_functionality; python manage.py test_icon_functionality; gunicorn demo.wsgi:application
+CMD set -xe; python manage.py migrate --noinput; python manage.py create_default_superuser; python manage.py setup_demo_pages; python manage.py create_default_menus; python manage.py verify_setup; gunicorn demo.wsgi:application
