@@ -42,9 +42,38 @@ COPY --chown=wagtail:wagtail . .
 # This ensures your custom navigation changes are included
 RUN pip install --no-cache-dir -e .
 
+# Install npm dependencies
+RUN npm ci --no-audit
+
+# Debug: Check what exists before build
+RUN echo "=== BEFORE BUILD ===" && \
+    echo "Source files in static_src:" && \
+    ls -la /app/wagtail/admin/static_src/wagtailadmin/js/vendor/ | head -3 && \
+    echo "Static directory before build:" && \
+    ls -la /app/wagtail/admin/static/ 2>/dev/null || echo "Static directory doesn't exist yet"
+
 # Build static assets (JavaScript, CSS, etc.)
-# This compiles all the frontend code
-RUN npm ci --no-audit && npm run build
+RUN echo "=== RUNNING BUILD ===" && \
+    npm run build
+
+# Debug: Check what exists after build
+RUN echo "=== AFTER BUILD ===" && \
+    echo "Static directory after build:" && \
+    ls -la /app/wagtail/admin/static/ && \
+    echo "Vendor files after build:" && \
+    ls -la /app/wagtail/admin/static/wagtailadmin/js/vendor/ 2>/dev/null || echo "Vendor directory still missing"
+
+# Workaround: If vendor files weren't copied by webpack, copy them manually
+RUN if [ ! -d "/app/wagtail/admin/static/wagtailadmin/js/vendor" ]; then \
+        echo "=== MANUAL COPY WORKAROUND ===" && \
+        echo "Webpack didn't copy vendor files, copying manually..." && \
+        mkdir -p /app/wagtail/admin/static/wagtailadmin/js/vendor && \
+        cp -r /app/wagtail/admin/static_src/wagtailadmin/js/vendor/* /app/wagtail/admin/static/wagtailadmin/js/vendor/ && \
+        echo "Manual copy completed" && \
+        ls -la /app/wagtail/admin/static/wagtailadmin/js/vendor/ | head -5; \
+    else \
+        echo "Vendor files exist, no manual copy needed"; \
+    fi
 
 # Navigate to demo directory
 WORKDIR /app/demo
@@ -58,10 +87,14 @@ RUN chown -R wagtail:wagtail /app
 # Use user "wagtail" to run the build commands below and the server itself.
 USER wagtail
 
-# Verify source files exist before collectstatic
-RUN echo "=== PRE-COLLECTSTATIC CHECK ===" && \
-    ls -la /app/wagtail/admin/static/wagtailadmin/js/vendor/jquery-3.6.0.min.js && \
-    echo "jQuery source file confirmed"
+# Debug: Check what files exist after npm build
+RUN echo "=== DEBUGGING BUILD PROCESS ===" && \
+    echo "Checking static_src (source files):" && \
+    ls -la /app/wagtail/admin/static_src/wagtailadmin/js/vendor/ | head -5 && \
+    echo "Checking static (built files):" && \
+    ls -la /app/wagtail/admin/static/wagtailadmin/js/vendor/ 2>/dev/null | head -5 || echo "Built vendor directory missing" && \
+    echo "Checking if static directory exists at all:" && \
+    ls -la /app/wagtail/admin/static/ 2>/dev/null || echo "Static directory missing entirely"
 
 # Collect static files with detailed output
 RUN echo "=== RUNNING COLLECTSTATIC ===" && \
