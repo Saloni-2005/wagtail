@@ -74,24 +74,23 @@ class NonStrictCompressedManifestStaticFilesStorage(CompressedManifestStaticFile
         except (ValueError, MissingFileError):
             return name
 
-# Use the STORAGES setting from base.py (CompressedManifestStaticFilesStorage)
-# But we need to relax strictness because of a missing Jcrop.gif in Wagtail 7.3a0
+# Use simpler static file storage to fix 404 issues
 STORAGES = {
     "default": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
     "staticfiles": {
-        "BACKEND": "demo.settings.production.NonStrictCompressedManifestStaticFilesStorage",
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
     },
 }
 
-# Alternative: If the above still causes issues, uncomment this simpler approach:
+# Alternative manifest storage (currently disabled due to 404 issues):
 # STORAGES = {
 #     "default": {
 #         "BACKEND": "django.core.files.storage.FileSystemStorage",
 #     },
 #     "staticfiles": {
-#         "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+#         "BACKEND": "demo.settings.production.NonStrictCompressedManifestStaticFilesStorage",
 #     },
 # }
 
@@ -103,6 +102,13 @@ WAGTAILADMIN_STATIC_FILE_VERSION_STRINGS = False
 WHITENOISE_USE_FINDERS = True
 WHITENOISE_AUTOREFRESH = True
 WHITENOISE_MANIFEST_STRICT = False
+
+# Media files configuration for production
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+# Note: WhiteNoise doesn't serve media files by default
+# We'll handle media file serving in URLs configuration
 
 # Add static files debugging
 import logging

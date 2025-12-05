@@ -23,13 +23,22 @@ urlpatterns = [
     path("<slug:slug>/", views.menu_preview, name="menu_preview"),
 ]
 
-if settings.DEBUG:
-    from django.conf.urls.static import static
-    from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+# Serve static and media files
+from django.conf.urls.static import static
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
-    # Serve static and media files from development server
+if settings.DEBUG:
+    # Development server
     urlpatterns += staticfiles_urlpatterns()
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+else:
+    # Production: serve media files using custom view
+    from django.urls import re_path
+    from .views_media import serve_media
+    
+    urlpatterns += [
+        re_path(r'^media/(?P<path>.*)$', serve_media, name='serve_media'),
+    ]
 
 urlpatterns = urlpatterns + [
     # For anything not caught by a more specific rule above, hand over to

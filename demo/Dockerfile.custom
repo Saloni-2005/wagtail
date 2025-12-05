@@ -100,6 +100,19 @@ RUN echo "=== DEBUGGING BUILD PROCESS ===" && \
 RUN echo "=== RUNNING COLLECTSTATIC ===" && \
     python manage.py collectstatic --noinput --clear --verbosity 2 --traceback
 
+# Fix any missing static files
+RUN echo "=== FIXING MISSING STATIC FILES ===" && \
+    python manage.py fix_missing_static_files
+
+# Verify critical static files exist
+RUN echo "=== VERIFYING CRITICAL STATIC FILES ===" && \
+    echo "Checking for wagtailembeds JS..." && \
+    find /app/demo/staticfiles -name "*embed*" -type f | head -5 || echo "No embed files found" && \
+    echo "Checking for wagtailadmin icons..." && \
+    find /app/demo/staticfiles -path "*/wagtailadmin/images/icons/*" -name "*.svg" | head -5 || echo "No admin icons found" && \
+    echo "Checking staticfiles structure..." && \
+    ls -la /app/demo/staticfiles/ | head -10
+
 # Verify collection results
 RUN echo "=== POST-COLLECTSTATIC CHECK ===" && \
     echo "Staticfiles directory contents:" && \
