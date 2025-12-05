@@ -140,8 +140,9 @@ WAGTAILSEARCH_BACKENDS = {
 
 WAGTAILADMIN_BASE_URL = "http://example.com"
 
-# Disable Wagtail's version strings to avoid import-time storage checks
-WAGTAILADMIN_STATIC_FILE_VERSION_STRINGS = False
+# Enable Wagtail's version strings in development, disable in production
+# This will be overridden in production.py
+WAGTAILADMIN_STATIC_FILE_VERSION_STRINGS = True
 
 WAGTAILDOCS_EXTENSIONS = [
     'csv', 'docx', 'key', 'odt', 'pdf', 'pptx', 'rtf', 'txt', 'xlsx', 'zip'

@@ -64,9 +64,10 @@ RUN echo "DEBUG: Listing source static files for jquery..." && \
 
 RUN python manage.py collectstatic --noinput --clear --verbosity 2
 
-# DEBUG: Check if static files exist in STATIC_ROOT
-RUN echo "DEBUG: Listing collected static files for jquery..." && \
-    ls -l /app/demo/staticfiles/wagtailadmin/js/vendor/jquery-3.6.0.min.js || echo "jQuery NOT FOUND in staticfiles"
+# Verify static files were collected correctly
+RUN echo "Verifying static file collection..." && \
+    ls -la /app/demo/staticfiles/wagtailadmin/js/vendor/jquery-3.6.0.min.*.js && \
+    echo "Static files collected successfully"
 
 # Runtime command that executes when "docker run" is called
 # 1. Migrate the database
