@@ -1,0 +1,13 @@
+Django>=5.2,<5.3
+wagtail==7.3a0
+
+# Development dependencies
+django-extensions>=3.2.3
+
+# Shared dependencies
+dj-database-url==2.1.0
+whitenoise==6.6.0
+django-filter
+Pillow
+django-taggit
+django-modelcluster
