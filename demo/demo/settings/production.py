@@ -27,10 +27,18 @@ DATABASES = {
 # Static files - WhiteNoise is already added in base.py
 # MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
 
-from whitenoise.storage import CompressedManifestStaticFilesStorage
+from whitenoise.storage import CompressedManifestStaticFilesStorage, MissingFileError
 
 class NonStrictCompressedManifestStaticFilesStorage(CompressedManifestStaticFilesStorage):
     manifest_strict = False
+    
+    def hashed_name(self, name, content=None, filename=None):
+        try:
+            return super().hashed_name(name, content, filename)
+        except (ValueError, MissingFileError) as e:
+            # Suppress errors for missing files referenced in CSS
+            # This allows collectstatic to complete even if some referenced files are missing
+            return name
 
 # Use the STORAGES setting from base.py (CompressedManifestStaticFilesStorage)
 # But we need to relax strictness because of a missing Jcrop.gif in Wagtail 7.3a0
