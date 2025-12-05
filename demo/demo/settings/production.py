@@ -37,8 +37,7 @@ class NonStrictCompressedManifestStaticFilesStorage(CompressedManifestStaticFile
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Force manifest loading
-        self.load_manifest()
+        # Don't force manifest loading during init - it may not exist yet during collectstatic
     
     def hashed_name(self, name, content=None, filename=None):
         try:
@@ -85,6 +84,16 @@ STORAGES = {
         "BACKEND": "demo.settings.production.NonStrictCompressedManifestStaticFilesStorage",
     },
 }
+
+# Alternative: If the above still causes issues, uncomment this simpler approach:
+# STORAGES = {
+#     "default": {
+#         "BACKEND": "django.core.files.storage.FileSystemStorage",
+#     },
+#     "staticfiles": {
+#         "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+#     },
+# }
 
 # Force Django to use the static() template tag correctly with manifest storage
 # This ensures versioned_static resolves to hashed filenames

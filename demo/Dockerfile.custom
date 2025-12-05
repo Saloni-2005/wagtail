@@ -58,16 +58,23 @@ RUN chown -R wagtail:wagtail /app
 # Use user "wagtail" to run the build commands below and the server itself.
 USER wagtail
 
-# Collect static files (Django static files management)
-RUN echo "DEBUG: Listing source static files for jquery..." && \
-    ls -l /app/wagtail/admin/static/wagtailadmin/js/vendor/jquery-3.6.0.min.js || echo "jQuery NOT FOUND in source"
+# Verify source files exist before collectstatic
+RUN echo "=== PRE-COLLECTSTATIC CHECK ===" && \
+    ls -la /app/wagtail/admin/static/wagtailadmin/js/vendor/jquery-3.6.0.min.js && \
+    echo "jQuery source file confirmed"
 
-RUN python manage.py collectstatic --noinput --clear --verbosity 2
+# Collect static files with detailed output
+RUN echo "=== RUNNING COLLECTSTATIC ===" && \
+    python manage.py collectstatic --noinput --clear --verbosity 2 --traceback
 
-# Verify static files were collected correctly
-RUN echo "Verifying static file collection..." && \
-    ls -la /app/demo/staticfiles/wagtailadmin/js/vendor/jquery-3.6.0.min.*.js && \
-    echo "Static files collected successfully"
+# Verify collection results
+RUN echo "=== POST-COLLECTSTATIC CHECK ===" && \
+    echo "Staticfiles directory contents:" && \
+    ls -la /app/demo/staticfiles/ && \
+    echo "Looking for wagtailadmin..." && \
+    ls -la /app/demo/staticfiles/wagtailadmin/js/vendor/ 2>/dev/null || echo "wagtailadmin vendor directory missing" && \
+    echo "Searching for jQuery files..." && \
+    find /app/demo/staticfiles -name "*jquery*" -type f 2>/dev/null | head -5 || echo "No jQuery files collected"
 
 # Runtime command that executes when "docker run" is called
 # 1. Migrate the database
