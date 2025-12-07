@@ -38,11 +38,24 @@
 {% endblock %}
 
 {% block menu_content %}
-{% if menu_item.content %}
-<div class="content">
-    {{ menu_item.content|richtext }}
+<!-- Display menu content if it exists -->
+{% if menu.content %}
+<div class="menu-description">
+    <div class="menu-content-text">
+        {{ menu.content|richtext }}
+    </div>
+    <hr class="menu-content-separator">
 </div>
-{% else %}
-<p class="text-muted">No content has been added to this page yet.</p>
 {% endif %}
+
+<!-- Display menu item content -->
+<div class="menu-item-content">
+    {% if menu_item.content %}
+    <div class="content">
+        {{ menu_item.content|richtext }}
+    </div>
+    {% else %}
+    <p class="text-muted">No content has been added to this page yet.</p>
+    {% endif %}
+</div>
 {% endblock %}

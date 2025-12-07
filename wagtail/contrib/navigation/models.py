@@ -117,6 +117,7 @@ class UniqueLinkStreamBlock(blocks.StreamBlock):
 class Menu(ClusterableModel):
     title = models.CharField(max_length=50)
     slug = AutoSlugField(populate_from='title', editable=True, help_text="Unique identifier of menu. Will be populated automatically from title of menu. Change only if needed.")
+    content = RichTextField(blank=True, help_text=_("Content to display for this menu"))
     
     home_page = models.ForeignKey(
         'wagtailcore.Page', blank=True, null=True, related_name='+', on_delete=models.SET_NULL, help_text=_("Page to display on the menu's home screen")
@@ -145,6 +146,7 @@ class Menu(ClusterableModel):
         MultiFieldPanel([
             FieldPanel('title'),
             FieldPanel('slug'),
+            FieldPanel('content'),
             PageChooserPanel('home_page'),
             FieldPanel('home_url'),
         ], heading=_("Menu")),
