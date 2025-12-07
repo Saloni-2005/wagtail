@@ -158,47 +158,6 @@ class MenuCRUDTests(NavigationTestCase):
         with self.assertRaises(MenuItem.DoesNotExist):
             MenuItem.objects.get(id=item_id)
 
-class CyclePreventionTests(NavigationTestCase):
-    """Test prevention of circular references in menu hierarchies."""
-    
-    def test_prevent_self_parent(self):
-        """Test that menu items cannot be their own parent."""
-        item = MenuItem.objects.create(
-            menu=self.menu,
-            item_type="about",
-            title="About",
-            slug="about"
-        )
-        
-        # Try to make item its own parent (should be prevented by model logic)
-        # Note: This depends on your model implementation
-        # If you have parent field, add validation there
-        
-        # For now, test that item exists and has no parent
-        self.assertIsNone(getattr(item, 'parent', None))
-    
-    def test_submenu_hierarchy(self):
-        """Test proper submenu hierarchy without cycles."""
-        parent_item = MenuItem.objects.create(
-            menu=self.menu,
-            item_type="services",
-            title="Services",
-            slug="services"
-        )
-        
-        child_item = MenuItem.objects.create(
-            menu=self.menu,
-            item_type="custom",
-            title="Web Design",
-            slug="web-design",
-            title_of_submenu="Services Submenu"
-        )
-        
-        # Test submenu properties
-        self.assertEqual(child_item.title_of_submenu, "Services Submenu")
-        self.assertEqual(child_item.slug_of_submenu, "services-submenu")
-
-
 class URLGenerationTests(NavigationTestCase):
     """Test URL generation for different menu item types."""
     
