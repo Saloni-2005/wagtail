@@ -192,7 +192,6 @@ class MenuItem(Orderable):
         FieldPanel('title'),
         FieldPanel('slug'),
         FieldPanel('content'),
-        FieldPanel('link_url'),
         PageChooserPanel('link_page'),
         FieldPanel('open_in_new_tab'),
         FieldPanel('title_of_submenu'),
