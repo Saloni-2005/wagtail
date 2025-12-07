@@ -150,13 +150,7 @@ class Menu(ClusterableModel):
             PageChooserPanel('home_page'),
             FieldPanel('home_url'),
         ], heading=_("Menu")),
-        InlinePanel('menu_items', label=_("Menu Item")),
-        MultiFieldPanel([
-            FieldPanel('custom_header'),
-        ], heading=_("Custom Header"), classname="collapsible collapsed"),
-        MultiFieldPanel([
-            FieldPanel('custom_footer'),
-        ], heading=_("Custom Footer"), classname="collapsible collapsed"),
+        InlinePanel('menu_items', label=_("Menu Item"))
     ]
 
     def __str__(self):
