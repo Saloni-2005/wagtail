@@ -56,8 +56,6 @@ class LinkStructValue(blocks.StructValue):
                 return page.title
             return self.get('url')
         else:
-            # Return the display label for the selected choice
-            # Check all choice lists to find the label
             all_choices = dict(ITEM_TYPE_CHOICES + HEADER_LINK_CHOICES + FOOTER_LINK_CHOICES)
             return all_choices.get(link_type, link_type)
 
