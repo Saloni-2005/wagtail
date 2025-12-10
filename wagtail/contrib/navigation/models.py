@@ -111,11 +111,21 @@ class UniqueLinkStreamBlock(blocks.StreamBlock):
         return cleaned_data
 
 
+from .blocks import HeadingBlock, ImageBlock, CardBlock, ButtonBlock
+
+# ... existing imports ...
+
 @register_snippet
 class Menu(ClusterableModel):
     title = models.CharField(max_length=50)
     slug = AutoSlugField(populate_from='title', editable=True, help_text="Unique identifier of menu. Will be populated automatically from title of menu. Change only if needed.")
-    content = RichTextField(blank=True, help_text=_("Content to display for this menu"))
+    content = StreamField([
+        ('heading', HeadingBlock()),
+        ('paragraph', blocks.RichTextBlock()),
+        ('image', ImageBlock()),
+        ('card', CardBlock()),
+        ('button', ButtonBlock()),
+    ], blank=True, use_json_field=True, help_text=_("Content to display for this menu"))
     
     home_page = models.ForeignKey(
         'wagtailcore.Page', blank=True, null=True, related_name='+', on_delete=models.SET_NULL, help_text=_("Page to display on the menu's home screen")
@@ -154,7 +164,6 @@ class Menu(ClusterableModel):
     def __str__(self):
         return self.title
 
-
 class MenuItem(Orderable):
     ITEM_TYPE_CHOICES = ITEM_TYPE_CHOICES
 
@@ -167,8 +176,15 @@ class MenuItem(Orderable):
     )
     title = models.CharField(max_length=50, help_text=_("Title of menu item that will be displayed"))
     slug = AutoSlugField(populate_from='title', editable=True, help_text="URL-friendly version of title")
-    content = RichTextField(blank=True, help_text=_("Content to display on this menu item's page"))
+    content = StreamField([
+        ('heading', HeadingBlock()),
+        ('paragraph', blocks.RichTextBlock()),
+        ('image', ImageBlock()),
+        ('card', CardBlock()),
+        ('button', ButtonBlock()),
+    ], blank=True, use_json_field=True, help_text=_("Content to display on this menu item's page"))
     link_url = models.CharField(max_length=500, blank=True, null=True, help_text=_("External URL (LEAVE BLANK to use auto-generated page URL)"))
+
     link_page = models.ForeignKey(
         'wagtailcore.Page', blank=True, null=True, related_name='+', on_delete=models.CASCADE, help_text=_("Link to existing Wagtail page (LEAVE BLANK to use auto-generated page)"),
     )

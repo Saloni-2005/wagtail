@@ -1,0 +1,15 @@
+{% load wagtailimages_tags %}
+<div class="block-card" style="border: 1px solid #ddd; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+    <h3>{{ self.title }}</h3>
+    {% if self.image %}
+    {% image self.image width-800 as img %}
+    <img src="{{ img.url }}" alt="{{ self.image.title }}"
+        style="width: 100%; display: block; margin-bottom: 0.5rem; border-radius: 4px;">
+    {% endif %}
+    <p>{{ self.text }}</p>
+    {% if self.link_url %}
+    <a href="{{ self.link_url }}" class="btn btn-primary" style="display: inline-block; margin-top: 1rem;">
+        {{ self.link_text|default:"Read More" }}
+    </a>
+    {% endif %}
+</div>

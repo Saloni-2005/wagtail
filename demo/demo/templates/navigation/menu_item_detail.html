@@ -42,7 +42,9 @@
 {% if menu.content and menu_item.slug == 'home' %}
 <div class="menu-description">
     <div class="menu-content-text">
-        {{ menu.content|richtext }}
+        {% for block in menu.content %}
+        {% include_block block %}
+        {% endfor %}
     </div>
     <hr class="menu-content-separator">
 </div>
@@ -52,7 +54,9 @@
 <div class="menu-item-content">
     {% if menu_item.content %}
     <div class="content">
-        {{ menu_item.content|richtext }}
+        {% for block in menu_item.content %}
+        {% include_block block %}
+        {% endfor %}
     </div>
     {% else %}
     <p class="text-muted">No content has been added to this page yet.</p>

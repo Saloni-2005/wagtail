@@ -6,7 +6,9 @@
 {% if menu.content %}
 <div class="menu-description">
     <div class="menu-content-text">
-        {{ menu.content|richtext }}
+        {% for block in menu.content %}
+        {% include_block block %}
+        {% endfor %}
     </div>
 </div>
 {% endif %}
