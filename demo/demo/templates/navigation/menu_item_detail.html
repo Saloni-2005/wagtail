@@ -39,7 +39,7 @@
 
 {% block menu_content %}
 <!-- Display menu content if it exists -->
-{% if menu.content %}
+{% if menu.content and menu_item.slug == 'home' %}
 <div class="menu-description">
     <div class="menu-content-text">
         {{ menu.content|richtext }}
