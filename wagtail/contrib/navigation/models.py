@@ -111,13 +111,14 @@ class UniqueLinkStreamBlock(blocks.StreamBlock):
         return cleaned_data
 
 
-from .blocks import HeadingBlock, ImageBlock, CardBlock, ButtonBlock, VideoBlock, GridBlock
+from .blocks import HeadingBlock, ImageBlock, CardBlock, ButtonBlock, VideoBlock, GridBlock, CarouselBlock
 
 @register_snippet
 class Menu(ClusterableModel):
     title = models.CharField(max_length=50)
     slug = AutoSlugField(populate_from='title', editable=True, help_text="Unique identifier of menu. Will be populated automatically from title of menu. Change only if needed.")
     content = StreamField([
+        ('carousel', CarouselBlock()),
         ('heading', HeadingBlock()),
         ('paragraph', blocks.RichTextBlock()),
         ('image', ImageBlock()),
@@ -177,6 +178,7 @@ class MenuItem(Orderable):
     title = models.CharField(max_length=50, help_text=_("Title of menu item that will be displayed"))
     slug = AutoSlugField(populate_from='title', editable=True, help_text="URL-friendly version of title")
     content = StreamField([
+        ('carousel', CarouselBlock()),
         ('heading', HeadingBlock()),
         ('paragraph', blocks.RichTextBlock()),
         ('image', ImageBlock()),

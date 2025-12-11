@@ -107,3 +107,23 @@ class GridBlock(blocks.StructBlock):
         template = "navigation/blocks/grid_block.html"
         icon = "grip"
         label = _("Grid Layout")
+
+
+class CarouselItemBlock(blocks.StructBlock):
+    image = ImageChooserBlock(required=True)
+    title = blocks.CharBlock(required=False, max_length=100)
+    text = blocks.TextBlock(required=False, max_length=255)
+    link_url = blocks.CharBlock(required=False, label=_("Link URL"))
+    link_text = blocks.CharBlock(required=False, label=_("Link Text"))
+
+    class Meta:
+        label = _("Slide")
+
+
+class CarouselBlock(blocks.StructBlock):
+    items = blocks.ListBlock(CarouselItemBlock(), label=_("Slides"))
+
+    class Meta:
+        template = "navigation/blocks/carousel_block.html"
+        icon = "image"
+        label = _("Hero Carousel")
