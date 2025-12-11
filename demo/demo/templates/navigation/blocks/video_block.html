@@ -1,0 +1,44 @@
+{% load navigation_filters %}
+<div class="video-block" style="margin: 20px auto; width: {{ self.width|default:'100%' }};">
+    <div class="video-container" 
+    {% if self.height and self.height != 'auto' %}
+        style="height: {{ self.height }}; padding-bottom: 0;"
+    {% endif %}
+>
+    <iframe
+        src="{{ self.video|cut:'watch?v='|replace:'https://youtu.be/|https://www.youtube.com/embed/'|replace:'vimeo.com/|player.vimeo.com/video/' }}"
+        frameborder="0" allowfullscreen style="width: 100%; height: 100%;"></iframe>
+</div>
+    {% if self.caption %}
+    <p class="caption">{{ self.caption }}</p>
+    {% endif %}
+</div>
+
+<style>
+    /* Default aspect ratio handling if height is auto (16:9) */
+    .video-block .video-container:not([style*="height"]) {
+        position: relative;
+        padding-bottom: 56.25%;
+        height: 0;
+        overflow: hidden;
+    }
+
+    .video-block .video-container:not([style*="height"]) iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    /* Styles for when height is fixed (inline style overrides padding-bottom) */
+    .video-block .video-container {
+        position: relative;
+        /* height and padding logic handled inline for fixed heights */
+    }
+
+    .caption {
+        font-size: 0.9em;
+        color: #666;
+        text-align: center;
+        margin-top: 5px;
+    }
+</style>

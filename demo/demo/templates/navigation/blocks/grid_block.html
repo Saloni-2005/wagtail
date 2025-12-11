@@ -1,0 +1,34 @@
+{% load wagtailcore_tags %}
+<div class="grid-block columns-{{ self.columns }}">
+    {% for block in self.content %}
+    <div class="grid-item">
+        {% include_block block %}
+    </div>
+    {% endfor %}
+</div>
+
+<style>
+    .grid-block {
+        display: grid;
+        gap: 20px;
+        margin: 20px 0;
+    }
+
+    .columns-2 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .columns-3 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .columns-4 {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    @media (max-width: 768px) {
+        .grid-block {
+            grid-template-columns: 1fr !important;
+        }
+    }
+</style>

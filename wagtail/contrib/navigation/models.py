@@ -111,9 +111,7 @@ class UniqueLinkStreamBlock(blocks.StreamBlock):
         return cleaned_data
 
 
-from .blocks import HeadingBlock, ImageBlock, CardBlock, ButtonBlock
-
-# ... existing imports ...
+from .blocks import HeadingBlock, ImageBlock, CardBlock, ButtonBlock, VideoBlock, GridBlock
 
 @register_snippet
 class Menu(ClusterableModel):
@@ -125,6 +123,8 @@ class Menu(ClusterableModel):
         ('image', ImageBlock()),
         ('card', CardBlock()),
         ('button', ButtonBlock()),
+        ('video', VideoBlock()),
+        ('grid', GridBlock()),
     ], blank=True, use_json_field=True, help_text=_("Content to display for this menu"))
     
     home_page = models.ForeignKey(
@@ -182,6 +182,8 @@ class MenuItem(Orderable):
         ('image', ImageBlock()),
         ('card', CardBlock()),
         ('button', ButtonBlock()),
+        ('video', VideoBlock()),
+        ('grid', GridBlock()),
     ], blank=True, use_json_field=True, help_text=_("Content to display on this menu item's page"))
     link_url = models.CharField(max_length=500, blank=True, null=True, help_text=_("External URL (LEAVE BLANK to use auto-generated page URL)"))
 

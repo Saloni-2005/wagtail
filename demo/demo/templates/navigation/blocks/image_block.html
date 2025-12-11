@@ -1,8 +1,12 @@
 {% load wagtailimages_tags %}
-<div class="block-image">
-    {% image self.image original as img %}
-    <img src="{{ img.url }}" alt="{{ self.image.title }}" style="max-width: 100%; height: auto;">
+<div class="block-image" style="margin: 0 auto; width: 100%;">
+    <div
+        style="width: {{ self.width|default:'100%' }}; height: {{ self.height|default:'auto' }}; margin: 0 auto; position: relative;">
+        {% image self.image original as img %}
+        <img src="{{ img.url }}" alt="{{ self.image.title }}" style="width: 100%; height: 100%; object-fit: contain;">
+    </div>
     {% if self.caption %}
-    <p class="caption">{{ self.caption }}</p>
+    <p class="caption" style="text-align: center; margin-top: 5px; font-size: 0.9em; color: #666;">{{ self.caption }}
+    </p>
     {% endif %}
 </div>
