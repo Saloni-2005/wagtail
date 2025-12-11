@@ -122,6 +122,49 @@
         .has-sidebar .site-title {
             margin-right: auto;
         }
+
+        /* Animations & Micro-interactions (Inline to ensure loading) */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translate3d(0, 40px, 0);
+            }
+
+            to {
+                opacity: 1;
+                transform: translate3d(0, 0, 0);
+            }
+        }
+
+        .reveal-on-scroll {
+            opacity: 0;
+            transform: translate3d(0, 40px, 0);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            will-change: opacity, transform;
+        }
+
+        .reveal-on-scroll.is-visible {
+            opacity: 1;
+            transform: translate3d(0, 0, 0);
+        }
+
+        /* Hover Effects */
+        .card-block,
+        .video-block,
+        .block-image,
+        .grid-item,
+        .carousel-block {
+            transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.3s ease;
+        }
+
+        .card-block:hover,
+        .video-block:hover,
+        .block-image:hover,
+        .carousel-block:hover,
+        .grid-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
     </style>
     {% endblock %}
 </head>
@@ -182,7 +225,38 @@
     </footer>
 
     {# Global javascript #}
-    <script type="text/javascript" src="{% static 'js/demo.js' %}"></script>
+    {# Global javascript #}
+    <!-- Inline demo.js to ensure it loads -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Scroll Reveal Animation
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target); // Only animate once
+                    }
+                });
+            }, observerOptions);
+
+            const elements = document.querySelectorAll('.reveal-on-scroll');
+            elements.forEach(el => observer.observe(el));
+
+            // Optional: Add reveal class to blocks automatically if they don't have it
+            // This assumes specific block classes exist in your templates
+            const blocks = document.querySelectorAll('.grid-block, .video-block, .card-block, .block-image, .carousel-block, .grid-item');
+            blocks.forEach(el => {
+                el.classList.add('reveal-on-scroll');
+                observer.observe(el);
+            });
+        });
+    </script>
 
     <script>
         function updateAuthLink() {

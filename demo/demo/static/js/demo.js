@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Optional: Add reveal class to blocks automatically if they don't have it
     // This assumes specific block classes exist in your templates
-    const blocks = document.querySelectorAll('.grid-block, .video-block, .card-block, .block-image');
+    const blocks = document.querySelectorAll('.grid-block, .video-block, .card-block, .block-image, .carousel-block');
     blocks.forEach(el => {
         el.classList.add('reveal-on-scroll');
         observer.observe(el);

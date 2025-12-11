@@ -10,8 +10,9 @@
 <style>
     .grid-block {
         display: grid;
-        gap: 20px;
-        margin: 20px 0;
+        gap: 30px;
+        /* Increased gap for better spacing */
+        margin: 40px 0;
     }
 
     .columns-2 {
@@ -24,6 +25,26 @@
 
     .columns-4 {
         grid-template-columns: repeat(4, 1fr);
+    }
+
+    /* Center content in columns - Enforced */
+    .grid-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        /* Centers flex children (images, cards) horizontally */
+        text-align: center;
+        /* Centers text inside block-level elements */
+        justify-content: flex-start;
+        height: 100%;
+        width: 100%;
+        /* Ensure it takes full column width */
+    }
+
+    /* Ensure images inside grid items behave nicely */
+    .grid-item img {
+        max-width: 100%;
+        height: auto;
     }
 
     @media (max-width: 768px) {
