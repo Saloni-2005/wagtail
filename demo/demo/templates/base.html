@@ -385,46 +385,6 @@
                 }
             });
 
-            // ===== CAROUSEL AUTO-PLAY =====
-            const carousels = document.querySelectorAll('.carousel-block');
-            carousels.forEach(carousel => {
-                const slides = carousel.querySelectorAll('.carousel-slide');
-                if (slides.length > 1) {
-                    let currentSlide = 0;
-                    const autoPlayInterval = 5000;
-
-                    function showSlide(index) {
-                        slides.forEach((slide, i) => {
-                            slide.style.display = i === index ? 'block' : 'none';
-                        });
-                    }
-
-                    function nextSlide() {
-                        currentSlide = (currentSlide + 1) % slides.length;
-                        showSlide(currentSlide);
-                    }
-
-                    showSlide(0);
-                    setInterval(nextSlide, autoPlayInterval);
-
-                    const prevBtn = carousel.querySelector('.carousel-prev');
-                    const nextBtn = carousel.querySelector('.carousel-next');
-
-                    if (prevBtn) {
-                        prevBtn.addEventListener('click', () => {
-                            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
-                            showSlide(currentSlide);
-                        });
-                    }
-
-                    if (nextBtn) {
-                        nextBtn.addEventListener('click', () => {
-                            nextSlide();
-                        });
-                    }
-                }
-            });
-
             console.log('Navigation enhancements loaded successfully!');
         });
     </script>
