@@ -1,0 +1,21 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<div class="accordion-block" data-allow-multiple="{{ value.allow_multiple_open }}">
+    {% for item in value.items %}
+    <div class="accordion-item">
+        <button class="accordion-header" aria-expanded="false">
+            <span class="accordion-title">{{ item.title }}</span>
+            <span class="accordion-icon">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </span>
+        </button>
+        <div class="accordion-content">
+            <div class="accordion-content-inner">
+                {{ item.content|richtext }}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>

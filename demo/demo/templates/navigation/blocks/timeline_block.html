@@ -1,0 +1,25 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<div class="timeline-block timeline-{{ value.orientation }}">
+    <div class="timeline-container">
+        {% for event in value.events %}
+        <div class="timeline-event {% cycle 'left' 'right' %}" data-index="{{ forloop.counter0 }}">
+            <div class="timeline-marker">
+                <div class="timeline-dot"></div>
+            </div>
+            <div class="timeline-content">
+                <div class="timeline-date">{{ event.date }}</div>
+                <h3 class="timeline-title">{{ event.title }}</h3>
+                {% if event.image %}
+                <div class="timeline-image">
+                    {% image event.image fill-600x400 class="timeline-img" loading="lazy" %}
+                </div>
+                {% endif %}
+                <div class="timeline-description">
+                    {{ event.description|richtext }}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>

@@ -111,7 +111,10 @@ class UniqueLinkStreamBlock(blocks.StreamBlock):
         return cleaned_data
 
 
-from .blocks import HeadingBlock, ImageBlock, CardBlock, ButtonBlock, VideoBlock, GridBlock, CarouselBlock
+from .blocks import (
+    HeadingBlock, ImageBlock, CardBlock, ButtonBlock, VideoBlock, GridBlock, CarouselBlock,
+    AccordionBlock, TabsBlock, GalleryBlock, TimelineBlock, TestimonialBlock
+)
 
 @register_snippet
 class Menu(ClusterableModel):
@@ -126,6 +129,11 @@ class Menu(ClusterableModel):
         ('button', ButtonBlock()),
         ('video', VideoBlock()),
         ('grid', GridBlock()),
+        ('accordion', AccordionBlock()),
+        ('tabs', TabsBlock()),
+        ('gallery', GalleryBlock()),
+        ('timeline', TimelineBlock()),
+        ('testimonials', TestimonialBlock()),
     ], blank=True, use_json_field=True, help_text=_("Content to display for this menu"))
     
     home_page = models.ForeignKey(
@@ -169,6 +177,14 @@ class MenuItem(Orderable):
     ITEM_TYPE_CHOICES = ITEM_TYPE_CHOICES
 
     menu = ParentalKey('Menu', related_name='menu_items', help_text=_("Menu to which this item belongs"))
+    parent = models.ForeignKey(
+        'self',
+        blank=True,
+        null=True,
+        related_name='children',
+        on_delete=models.CASCADE,
+        help_text=_("Parent menu item (leave blank for top-level items)")
+    )
     item_type = models.CharField(
         max_length=20,
         choices=ITEM_TYPE_CHOICES,
@@ -186,6 +202,11 @@ class MenuItem(Orderable):
         ('button', ButtonBlock()),
         ('video', VideoBlock()),
         ('grid', GridBlock()),
+        ('accordion', AccordionBlock()),
+        ('tabs', TabsBlock()),
+        ('gallery', GalleryBlock()),
+        ('timeline', TimelineBlock()),
+        ('testimonials', TestimonialBlock()),
     ], blank=True, use_json_field=True, help_text=_("Content to display on this menu item's page"))
     link_url = models.CharField(max_length=500, blank=True, null=True, help_text=_("External URL (LEAVE BLANK to use auto-generated page URL)"))
 
@@ -207,6 +228,7 @@ class MenuItem(Orderable):
 
     panels = [
         FieldPanel('item_type'),
+        FieldPanel('parent'),
         FieldPanel('title'),
         FieldPanel('slug'),
         FieldPanel('content'),
@@ -246,3 +268,32 @@ class MenuItem(Orderable):
         return ((self.show_when == 'always')
                 or (self.show_when == 'logged_in' and authenticated)
                 or (self.show_when == 'not_logged_in' and not authenticated))
+    
+    def get_children(self):
+        """Get all child menu items"""
+        return self.children.all()
+    
+    def get_ancestors(self):
+        """Get all ancestor menu items for breadcrumb generation"""
+        ancestors = []
+        current = self.parent
+        while current:
+            ancestors.insert(0, current)
+            current = current.parent
+        return ancestors
+    
+    @property
+    def is_parent(self):
+        """Check if this item has children"""
+        return self.children.exists()
+    
+    @property
+    def depth(self):
+        """Calculate depth level in hierarchy (0 = top level)"""
+        depth = 0
+        current = self.parent
+        while current:
+            depth += 1
+            current = current.parent
+        return depth
+

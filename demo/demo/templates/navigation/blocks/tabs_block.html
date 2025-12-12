@@ -1,0 +1,21 @@
+{% load wagtailcore_tags %}
+
+<div class="tabs-block" data-default-tab="{{ value.default_tab }}">
+    <div class="tabs-header">
+        {% for tab in value.tabs %}
+        <button class="tab-button {% if forloop.counter0 == value.default_tab %}active{% endif %}"
+            data-tab-index="{{ forloop.counter0 }}" role="tab"
+            aria-selected="{% if forloop.counter0 == value.default_tab %}true{% else %}false{% endif %}">
+            {{ tab.title }}
+        </button>
+        {% endfor %}
+    </div>
+    <div class="tabs-content">
+        {% for tab in value.tabs %}
+        <div class="tab-panel {% if forloop.counter0 == value.default_tab %}active{% endif %}"
+            data-tab-index="{{ forloop.counter0 }}" role="tabpanel">
+            {{ tab.content|richtext }}
+        </div>
+        {% endfor %}
+    </div>
+</div>

@@ -1,0 +1,20 @@
+{% load wagtailimages_tags %}
+
+<div class="gallery-block" data-columns="{{ value.columns }}" data-lightbox="{{ value.enable_lightbox }}">
+    <div class="gallery-grid columns-{{ value.columns }}">
+        {% for item in value.images %}
+        <div class="gallery-item">
+            {% if value.enable_lightbox %}
+            <a href="{% image_url item.image 'original' %}" class="gallery-link" data-lightbox="gallery">
+                {% image item.image fill-400x300 class="gallery-image" loading="lazy" %}
+            </a>
+            {% else %}
+            {% image item.image fill-400x300 class="gallery-image" loading="lazy" %}
+            {% endif %}
+            {% if item.caption %}
+            <p class="gallery-caption">{{ item.caption }}</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>

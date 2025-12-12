@@ -127,3 +127,146 @@ class CarouselBlock(blocks.StructBlock):
         template = "navigation/blocks/carousel_block.html"
         icon = "image"
         label = _("Hero Carousel")
+
+
+# Accordion Block
+class AccordionItemBlock(blocks.StructBlock):
+    title = blocks.CharBlock(required=True, max_length=100, label=_("Section Title"))
+    content = blocks.RichTextBlock(required=True, label=_("Section Content"))
+    
+    class Meta:
+        label = _("Accordion Item")
+
+
+class AccordionBlock(blocks.StructBlock):
+    items = blocks.ListBlock(AccordionItemBlock(), label=_("Accordion Sections"))
+    allow_multiple_open = blocks.BooleanBlock(
+        required=False,
+        default=False,
+        help_text=_("Allow multiple sections to be open at once")
+    )
+    
+    class Meta:
+        template = "navigation/blocks/accordion_block.html"
+        icon = "list-ul"
+        label = _("Accordion")
+
+
+# Tabs Block
+class TabItemBlock(blocks.StructBlock):
+    title = blocks.CharBlock(required=True, max_length=50, label=_("Tab Title"))
+    content = blocks.RichTextBlock(required=True, label=_("Tab Content"))
+    
+    class Meta:
+        label = _("Tab")
+
+
+class TabsBlock(blocks.StructBlock):
+    tabs = blocks.ListBlock(TabItemBlock(), label=_("Tabs"))
+    default_tab = blocks.IntegerBlock(
+        required=False,
+        default=0,
+        help_text=_("Index of the default active tab (0 = first tab)")
+    )
+    
+    class Meta:
+        template = "navigation/blocks/tabs_block.html"
+        icon = "folder-open-inverse"
+        label = _("Tabs")
+
+
+# Gallery Block
+class GalleryImageBlock(blocks.StructBlock):
+    image = ImageChooserBlock(required=True)
+    caption = blocks.CharBlock(required=False, max_length=200)
+    
+    class Meta:
+        label = _("Gallery Image")
+
+
+class GalleryBlock(blocks.StructBlock):
+    images = blocks.ListBlock(GalleryImageBlock(), label=_("Images"))
+    columns = blocks.ChoiceBlock(
+        choices=[
+            ('2', '2 Columns'),
+            ('3', '3 Columns'),
+            ('4', '4 Columns'),
+        ],
+        default='3',
+        label=_("Layout")
+    )
+    enable_lightbox = blocks.BooleanBlock(
+        required=False,
+        default=True,
+        help_text=_("Enable lightbox for full-size image viewing")
+    )
+    
+    class Meta:
+        template = "navigation/blocks/gallery_block.html"
+        icon = "image"
+        label = _("Gallery")
+
+
+# Timeline Block
+class TimelineEventBlock(blocks.StructBlock):
+    date = blocks.CharBlock(required=True, max_length=50, label=_("Date"))
+    title = blocks.CharBlock(required=True, max_length=100, label=_("Event Title"))
+    description = blocks.RichTextBlock(required=True, label=_("Description"))
+    image = ImageChooserBlock(required=False, label=_("Event Image"))
+    
+    class Meta:
+        label = _("Timeline Event")
+
+
+class TimelineBlock(blocks.StructBlock):
+    events = blocks.ListBlock(TimelineEventBlock(), label=_("Timeline Events"))
+    orientation = blocks.ChoiceBlock(
+        choices=[
+            ('vertical', _('Vertical')),
+            ('horizontal', _('Horizontal')),
+        ],
+        default='vertical',
+        label=_("Orientation")
+    )
+    
+    class Meta:
+        template = "navigation/blocks/timeline_block.html"
+        icon = "date"
+        label = _("Timeline")
+
+
+# Testimonial Block
+class TestimonialItemBlock(blocks.StructBlock):
+    name = blocks.CharBlock(required=True, max_length=100, label=_("Name"))
+    role = blocks.CharBlock(required=False, max_length=100, label=_("Role/Title"))
+    company = blocks.CharBlock(required=False, max_length=100, label=_("Company"))
+    text = blocks.TextBlock(required=True, label=_("Testimonial"))
+    image = ImageChooserBlock(required=False, label=_("Photo"))
+    rating = blocks.IntegerBlock(
+        required=False,
+        min_value=1,
+        max_value=5,
+        help_text=_("Rating out of 5 stars")
+    )
+    
+    class Meta:
+        label = _("Testimonial")
+
+
+class TestimonialBlock(blocks.StructBlock):
+    testimonials = blocks.ListBlock(TestimonialItemBlock(), label=_("Testimonials"))
+    layout = blocks.ChoiceBlock(
+        choices=[
+            ('single', _('Single')),
+            ('grid', _('Grid')),
+            ('carousel', _('Carousel')),
+        ],
+        default='grid',
+        label=_("Layout Style")
+    )
+    
+    class Meta:
+        template = "navigation/blocks/testimonial_block.html"
+        icon = "openquote"
+        label = _("Testimonials")
+

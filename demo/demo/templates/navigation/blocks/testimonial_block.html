@@ -1,0 +1,42 @@
+{% load wagtailimages_tags %}
+
+<div class="testimonial-block testimonial-{{ value.layout }}">
+    <div class="testimonials-container">
+        {% for testimonial in value.testimonials %}
+        <div class="testimonial-item">
+            <div class="testimonial-content">
+                <div class="testimonial-quote">
+                    <svg class="quote-icon" width="40" height="40" viewBox="0 0 40 40" fill="none">
+                        <path
+                            d="M10 20C10 15 12 10 16 8V12C14 13 12 15 12 18H16V26H10V20ZM24 20C24 15 26 10 30 8V12C28 13 26 15 26 18H30V26H24V20Z"
+                            fill="currentColor" />
+                    </svg>
+                    <p class="testimonial-text">{{ testimonial.text }}</p>
+                </div>
+                {% if testimonial.rating %}
+                <div class="testimonial-rating">
+                    {% for i in "12345" %}
+                    <span class="star {% if forloop.counter <= testimonial.rating %}filled{% endif %}">★</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            <div class="testimonial-author">
+                {% if testimonial.image %}
+                <div class="author-image">
+                    {% image testimonial.image fill-80x80 class="author-photo" %}
+                </div>
+                {% endif %}
+                <div class="author-info">
+                    <div class="author-name">{{ testimonial.name }}</div>
+                    {% if testimonial.role %}
+                    <div class="author-role">
+                        {{ testimonial.role }}{% if testimonial.company %}, {{ testimonial.company }}{% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
